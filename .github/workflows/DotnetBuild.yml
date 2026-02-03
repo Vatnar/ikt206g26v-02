@@ -1,0 +1,25 @@
+name: Dotnet Build StringLibrary
+on:
+  push: {}
+  pull_request: 
+    types: [opened, synchronize, reopened]
+
+jobs: 
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.x'
+      - run: dotnet restore StringLibrary
+      - run: dotnet build --no-restore StringLibrary
+
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - run: dotnet test StringLibrary  --no-restore --logger trx
+    
